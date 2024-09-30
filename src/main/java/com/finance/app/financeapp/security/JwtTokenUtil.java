@@ -10,6 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class to handle operations related to JSON Web Tokens (JWT).
+ * Provides methods for generating, validating, and extracting information from JWT tokens.
+ */
 @Component
 public class JwtTokenUtil {
 

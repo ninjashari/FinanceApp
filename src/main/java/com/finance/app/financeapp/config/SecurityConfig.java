@@ -8,18 +8,26 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configures security settings for the application including JWT authentication,
+ * password encoding, and authentication management.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * Constructs a new instance of SecurityConfig with the provided JwtAuthenticationFilter.
+     *
+     * @param jwtAuthenticationFilter the JWT authentication filter to be used in the security configuration
+     */
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -40,11 +48,23 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Creates a BCryptPasswordEncoder bean that will be used for encoding passwords.
+     *
+     * @return an instance of BCryptPasswordEncoder for password encoding
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // Define BCrypt password encoder
     }
 
+    /**
+     * Provides the authentication manager bean using the specified authentication configuration.
+     *
+     * @param authenticationConfiguration the authentication configuration to use for building the authentication manager
+     * @return the configured AuthenticationManager instance
+     * @throws Exception if an error occurs during the configuration process
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();  // AuthenticationManager bean for login authentication

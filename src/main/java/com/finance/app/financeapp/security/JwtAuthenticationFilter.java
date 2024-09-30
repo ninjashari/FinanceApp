@@ -16,6 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * A filter that processes JWT authentication for each HTTP request.
+ * It checks the "Authorization" header for a valid JWT token, extracts the username from the token,
+ * and if the user is authenticated, sets the authentication in the security context holder.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -49,11 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = (UserDetails) userService.findByUsername(username);
+            UserDetails userDetails = userService.findByUsername(username);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails.getUsername())) {
-                WebAuthenticationDetailsSource detailsSource = new WebAuthenticationDetailsSource();
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
 
