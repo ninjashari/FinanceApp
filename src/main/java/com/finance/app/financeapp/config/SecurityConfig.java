@@ -24,6 +24,13 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param http the HttpSecurity configuration to be modified
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during the configuration process
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)  // Disable CSRF for stateless JWT-based security
