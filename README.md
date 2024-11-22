@@ -1,73 +1,87 @@
 # FinanceApp
 
-## Overview
+FinanceApp is a web application designed to manage financial accounts and transactions. It provides functionalities to
+manage user accounts, bank details, and individual account information.
 
-FinanceApp is a robust financial management application designed to help individuals and businesses manage their finances effectively. With features like expense tracking, budget planning, and financial reporting, it aims to provide a comprehensive solution for all financial management needs.
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
 
 ## Features
 
-- Expense tracking
-- Budget planning
-- Financial reporting
-- Multi-currency support
-- User-friendly interface
+- Manage user accounts
+- Manage bank details
+- Manage individual account information
 
-## Installation
+## Technologies Used
 
-To run FinanceApp locally, follow these steps:
+- **Java 17**: Core language used
+- **Spring Boot**: To create stand-alone, production-grade Spring-based applications
+- **Spring Data JPA**: For database interactions
+- **Spring MVC**: For creating REST APIs
+- **Lombok**: To reduce boilerplate code
+- **Jakarta EE**: Various enterprise features and specifications
 
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/FinanceApp.git
-    cd FinanceApp
-    ```
+## Getting Started
 
-2. **Setup the environment:**
+### Prerequisites
 
-   Ensure you have Java SDK version 21 installed. You can download it from [here](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html).
+- Java 17 or higher
+- Maven 3.6.0 or higher
 
-3. **Install dependencies:**
-    ```bash
-    ./mvnw clean install
-    ```
+### Setup
 
-4. **Run the application:**
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/FinanceApp.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd FinanceApp
+   ```
+3. Build the project using Maven:
+   ```sh
+   mvn clean install
+   ```
+4. Run the application:
+   ```sh
+   mvn spring-boot:run
+   ```
 
-## Usage
 
-Once the application is running, navigate to `http://localhost:8080` to access the app.
+## Project Structure
 
-### API Endpoints
+The project follows the standard Maven project structure:
 
-- **Get All Expenses:** `GET /api/expenses`
-- **Add Expense:** `POST /api/expenses`
-- **Update Expense:** `PUT /api/expenses/{id}`
-- **Delete Expense:** `DELETE /api/expenses/{id}`
+- **src/main/java**: Contains the main source code
+    - **com.finance.app.financeapp.controller**: Controllers for handling web requests
+        - `AccountController.java`: Manages account-related operations
+        - `BankController.java`: Manages bank-related operations
+        - `UserController.java`: Manages user-related operations
+    - **com.finance.app.financeapp.dto**: Data Transfer Objects
+        - `Account.java`: DTO for account data
+    - **com.finance.app.financeapp.repository**: JPA repositories
+        - `AccountRepository.java`: Repository for account entities
+    - **com.finance.app.financeapp.service**: Service interfaces
+        - `AccountService.java`
+        - `BankService.java`
+        - `UserService.java`
+    - **com.finance.app.financeapp.service.impl**: Service implementations
+        - `AccountServiceImpl.java`
+        - `BankServiceImpl.java`
+        - `UserServiceImpl.java`
 
-### Example Requests
+## Contributing
 
-- **To get all expenses:**
-    ```bash
-    curl -X GET http://localhost:8080/api/expenses
-    ```
+Contributions are welcome! Please follow these guidelines:
 
-- **To add an expense:**
-    ```bash
-    curl -X POST http://localhost:8080/api/expenses -H "Content-Type: application/json" -d '{"amount": 100, "description": "Dinner", "category": "Food"}'
-    ```
-
-## Dependencies
-
-- Java SDK 17
-- Jakarta EE
-- Spring Boot
-- Spring Data JPA
-- Spring MVC
-- Lombok
-
----
-
-Happy Coding!
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature-name`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature/your-feature-name`).
+6. Open a pull request.
