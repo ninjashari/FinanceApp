@@ -15,6 +15,10 @@ import java.util.List;
 @RequestMapping("/api/banks")
 public class BankController {
 
+    /**
+     * Service implementation for handling bank-related operations.
+     * This service is autowired into the controller to facilitate dependency injection.
+     */
     @Autowired
     private BankServiceImpl bankService;
 

@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bank> banks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Account> accounts = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

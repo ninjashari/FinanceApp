@@ -17,9 +17,20 @@ import java.util.List;
 @Service
 public class BankServiceImpl implements BankService {
 
+    /**
+     * Repository for performing CRUD operations on Bank entities.
+     * This repository is used to interact with the database layer and
+     * provides methods to save, retrieve, and delete Bank entities.
+     */
     @Autowired
     private BankRepository bankRepository;
 
+    /**
+     * Repository for performing CRUD operations on User entities.
+     * This repository extends JpaRepository to inherit standard
+     * database operations and also includes custom methods such as
+     * finding a User by their ID.
+     */
     @Autowired
     private UserRepository userRepository;
 
