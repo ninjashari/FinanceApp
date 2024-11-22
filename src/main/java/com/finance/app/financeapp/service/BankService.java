@@ -5,9 +5,9 @@ import com.finance.app.financeapp.dto.Bank;
 import java.util.List;
 
 public interface BankService {
-    public Bank addBank(Long userId, Bank bank);
+    Bank addBank(Long userId, Bank bank);
 
-    public List<Bank> getBanksByUser(Long userId);
+    List<Bank> getBanksByUser(Long userId);
 
-    public void deleteBank(Long bankId);
+    void deleteBank(Long bankId);
 }

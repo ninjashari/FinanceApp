@@ -4,7 +4,6 @@ package com.finance.app.financeapp.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * Represents a Bank entity in the application.
