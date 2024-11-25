@@ -3,6 +3,7 @@ package com.finance.app.financeapp.controller;
 import com.finance.app.financeapp.dto.User;
 import com.finance.app.financeapp.security.JwtTokenUtil;
 import com.finance.app.financeapp.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(UserController.class);
     /**
      * Provides access to user-related services, including user registration and retrieval.
      */
@@ -29,7 +30,7 @@ public class UserController {
 
     /**
      * Autowired instance of PasswordEncoder used to encode and decode passwords.
-     *
+     * <p>
      * This component is utilized in various functionalities such as
      * user registration and authentication to ensure password security.
      */
@@ -52,7 +53,7 @@ public class UserController {
      *
      * @param user The user details containing username and password for authentication.
      * @return A ResponseEntity containing the JWT token if authentication is successful,
-     *         or an error message if authentication fails.
+     * or an error message if authentication fails.
      */
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
@@ -62,9 +63,11 @@ public class UserController {
         if (foundUser != null && passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
             // If passwords match, generate the JWT token
             String token = jwtTokenUtil.generateToken(foundUser.getUsername());
+            LOG.info("User {} logged in successfully", foundUser.getUsername());
             return ResponseEntity.ok("Bearer " + token);
         }
-
+        assert foundUser != null;
+        LOG.info("User {} failed to login", foundUser.getUsername());
         // Return error if credentials are invalid
         return ResponseEntity.status(401).body("Invalid credentials");
     }

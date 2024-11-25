@@ -5,6 +5,7 @@ import com.finance.app.financeapp.dto.User;
 import com.finance.app.financeapp.repository.BankRepository;
 import com.finance.app.financeapp.repository.UserRepository;
 import com.finance.app.financeapp.service.BankService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class BankServiceImpl implements BankService {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(BankServiceImpl.class);
     /**
      * Repository for performing CRUD operations on Bank entities.
      * This repository is used to interact with the database layer and
@@ -38,12 +39,13 @@ public class BankServiceImpl implements BankService {
      * Adds a new bank associated with a specified user ID.
      *
      * @param userId the ID of the user to associate the bank with
-     * @param bank the Bank entity to be added
+     * @param bank   the Bank entity to be added
      * @return the saved Bank entity associated with the specified user
      * @throws RuntimeException if the user with the specified ID is not found
      */
     @Override
     public Bank addBank(Long userId, Bank bank) {
+        LOG.info("Adding bank for user: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         bank.setUser(user);
         return bankRepository.save(bank);

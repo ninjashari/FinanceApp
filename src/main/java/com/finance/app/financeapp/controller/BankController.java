@@ -2,6 +2,7 @@ package com.finance.app.financeapp.controller;
 
 import com.finance.app.financeapp.dto.Bank;
 import com.finance.app.financeapp.service.impl.BankServiceImpl;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/banks")
 public class BankController {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(BankController.class);
     /**
      * Service implementation for handling bank-related operations.
      * This service is autowired into the controller to facilitate dependency injection.
@@ -32,6 +33,7 @@ public class BankController {
     @PostMapping("/{userId}")
     public ResponseEntity<Bank> addBank(@PathVariable Long userId, @RequestBody Bank bank) {
         Bank savedBank = bankService.addBank(userId, bank);
+        LOG.info("Bank created: {}", bank);
         return ResponseEntity.ok(savedBank);
     }
 
@@ -44,6 +46,7 @@ public class BankController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<Bank>> getBanksByUser(@PathVariable Long userId) {
         List<Bank> banks = bankService.getBanksByUser(userId);
+        LOG.info("Banks retrieved: {}", banks);
         return ResponseEntity.ok(banks);
     }
 
@@ -56,6 +59,7 @@ public class BankController {
     @DeleteMapping("/{bankId}")
     public ResponseEntity<String> deleteBank(@PathVariable Long bankId) {
         bankService.deleteBank(bankId);
+        LOG.info("Bank deleted: {}", bankId);
         return ResponseEntity.ok("Bank deleted successfully");
     }
 }

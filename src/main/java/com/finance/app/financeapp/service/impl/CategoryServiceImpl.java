@@ -5,6 +5,7 @@ import com.finance.app.financeapp.dto.User;
 import com.finance.app.financeapp.repository.CategoryRepository;
 import com.finance.app.financeapp.repository.UserRepository;
 import com.finance.app.financeapp.service.CategoryService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(CategoryServiceImpl.class);
     /**
      * Repository for performing CRUD operations on Category entities.
      * <p>
@@ -47,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Category createCategory(Long userId, Category category) {
+        LOG.info("Creating category for user: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         category.setUser(user);
         category.setCreatedAt(new Date());
@@ -76,6 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Category updateCategory(Long userId, Long categoryId, Category categoryDetails) {
+        LOG.info("Updating category: {}", categoryId);
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
@@ -98,13 +101,16 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void deleteCategory(Long userId, Long categoryId) {
+        LOG.info("Deleting category: {}", categoryId);
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         if (!category.getUser().getId().equals(userId)) {
+            LOG.info("Unauthorized to delete this category");
             throw new RuntimeException("Unauthorized to delete this category");
         }
 
         categoryRepository.delete(category);
+        LOG.info("Category deleted");
     }
 }
