@@ -2,6 +2,7 @@ package com.finance.app.financeapp.controller;
 
 import com.finance.app.financeapp.dto.Account;
 import com.finance.app.financeapp.service.impl.AccountServiceImpl;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(AccountController.class);
     /**
      * Service implementation for handling account-related operations.
      * This service is autowired into the controller to facilitate dependency injection.
@@ -32,6 +33,7 @@ public class AccountController {
     @PostMapping("/{userId}")
     public ResponseEntity<Account> createAccount(@PathVariable Long userId, @RequestBody Account account) {
         Account createdAccount = accountService.createAccount(userId, account);
+        LOG.info("Account created: {}", createdAccount);
         return ResponseEntity.ok(createdAccount);
     }
 
@@ -44,6 +46,7 @@ public class AccountController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<Account>> getAccountsByUser(@PathVariable Long userId) {
         List<Account> accounts = accountService.getAccountsByUser(userId);
+        LOG.info("Accounts retrieved: {}", accounts);
         return ResponseEntity.ok(accounts);
     }
 
@@ -57,6 +60,7 @@ public class AccountController {
     @PutMapping("/{accountId}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account accountDetails) {
         Account updatedAccount = accountService.updateAccount(accountId, accountDetails);
+        LOG.info("Account updated: {}", updatedAccount);
         return ResponseEntity.ok(updatedAccount);
     }
 
@@ -69,6 +73,7 @@ public class AccountController {
     @DeleteMapping("/{accountId}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long accountId) {
         accountService.deleteAccount(accountId);
+        LOG.info("Account deleted: {}", accountId);
         return ResponseEntity.ok("Account deleted successfully");
     }
 }

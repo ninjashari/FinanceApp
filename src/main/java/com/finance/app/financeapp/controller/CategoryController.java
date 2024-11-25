@@ -2,6 +2,7 @@ package com.finance.app.financeapp.controller;
 
 import com.finance.app.financeapp.dto.Category;
 import com.finance.app.financeapp.service.CategoryService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
-
+    Logger LOG = org.slf4j.LoggerFactory.getLogger(CategoryController.class);
     /**
      * Service responsible for managing category-related operations.
      * This service is autowired into the controller to facilitate dependency injection.
@@ -32,6 +33,7 @@ public class CategoryController {
     @PostMapping("/{userId}")
     public ResponseEntity<Category> createCategory(@PathVariable Long userId, @RequestBody Category category) {
         Category createdCategory = categoryService.createCategory(userId, category);
+        LOG.info("Category created: {}", createdCategory);
         return ResponseEntity.ok(createdCategory);
     }
 
@@ -44,6 +46,7 @@ public class CategoryController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<Category>> getCategoriesByUser(@PathVariable Long userId) {
         List<Category> categories = categoryService.getCategoriesByUser(userId);
+        LOG.info("Categories retrieved: {}", categories);
         return ResponseEntity.ok(categories);
     }
 
@@ -61,6 +64,7 @@ public class CategoryController {
             @PathVariable Long categoryId,
             @RequestBody Category categoryDetails) {
         Category updatedCategory = categoryService.updateCategory(userId, categoryId, categoryDetails);
+        LOG.info("Category updated: {}", updatedCategory);
         return ResponseEntity.ok(updatedCategory);
     }
 
@@ -74,6 +78,7 @@ public class CategoryController {
     @DeleteMapping("/{userId}/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long userId, @PathVariable Long categoryId) {
         categoryService.deleteCategory(userId, categoryId);
+        LOG.info("Category deleted: {}", categoryId);
         return ResponseEntity.ok("Category deleted successfully");
     }
 }

@@ -5,6 +5,7 @@ import com.finance.app.financeapp.dto.User;
 import com.finance.app.financeapp.repository.AccountRepository;
 import com.finance.app.financeapp.repository.UserRepository;
 import com.finance.app.financeapp.service.AccountService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Service
 public class AccountServiceImpl implements AccountService {
+    private Logger LOG = org.slf4j.LoggerFactory.getLogger(AccountServiceImpl.class);
 
     /**
      * Repository for performing CRUD operations on Account entities.
@@ -43,10 +45,12 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account createAccount(Long userId, Account account) {
+        LOG.info("Creating account for user: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         account.setUser(user);
         account.setCreatedDate(new Date());
         account.setUpdatedDate(new Date());
+        LOG.info("Account created: {}", account);
         return accountRepository.save(account);
     }
 
@@ -58,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public List<Account> getAccountsByUser(Long userId) {
+        LOG.info("Retrieving accounts for user: {}", userId);
         return accountRepository.findByUserId(userId);
     }
 
@@ -71,6 +76,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account updateAccount(Long accountId, Account accountDetails) {
+        LOG.info("Updating account: {}", accountId);
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));
         account.setName(accountDetails.getName());
         account.setType(accountDetails.getType());
@@ -87,6 +93,8 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void deleteAccount(Long accountId) {
+        LOG.info("Deleting account: {}", accountId);
         accountRepository.deleteById(accountId);
+        LOG.info("Account deleted");
     }
 }
