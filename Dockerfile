@@ -1,5 +1,5 @@
 # Step 1: Use JDK 23 for building the application
-FROM eclipse-temurin:23-jdk-alpine AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 
 # Set working directory inside the container
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Step 2: Use JDK 23 for running the application
-FROM eclipse-temurin:23-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 
 # Set working directory
 WORKDIR /app
