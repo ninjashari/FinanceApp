@@ -7,5 +7,4 @@ public class Status {
     private Integer code;
     private String status;
     private String message;
-
 }

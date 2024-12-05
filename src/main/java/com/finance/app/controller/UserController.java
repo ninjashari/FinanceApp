@@ -4,7 +4,6 @@ import com.finance.app.dto.Status;
 import com.finance.app.dto.User;
 import com.finance.app.service.UserService;
 import jakarta.validation.Valid;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Status> signup(@Valid @RequestBody User user) {
         try {
-            User response = (User) userService.registerUser(user);
+            userService.registerUser(user);
             Status status = new Status();
             status.setCode(HttpStatus.OK.value());
             status.setStatus(HttpStatus.OK.getReasonPhrase());
