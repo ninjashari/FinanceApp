@@ -1,9 +1,9 @@
-package com.finance.app.dto;
+package com.finance.app.model;
 
 import lombok.Data;
 
 @Data
-public class UserLogin {
+public class LoginRequest {
     private String username;
     private String password;
 }

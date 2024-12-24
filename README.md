@@ -62,7 +62,7 @@ The project follows the standard Maven project structure:
         - `AccountController.java`: Manages account-related operations
         - `BankController.java`: Manages bank-related operations
         - `UserController.java`: Manages user-related operations
-    - **com.finance.app.dto**: Data Transfer Objects
+    - **com.finance.app.model**: Data Transfer Objects
         - `Account.java`: DTO for account data
     - **com.finance.app.repository**: JPA repositories
         - `AccountRepository.java`: Repository for account entities

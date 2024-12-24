@@ -1,9 +1,9 @@
 package com.finance.app.service;
 
-import com.finance.app.config.JwtUtil;
-import com.finance.app.dto.User;
+import com.finance.app.model.User;
 import com.finance.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,35 +16,11 @@ import java.time.LocalDateTime;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
+    private UserRepository userRepository;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    /**
-     * Authenticates a user by validating the provided username and password
-     * against stored credentials and, if successful, generates a JWT token
-     * for the user.
-     *
-     * @param username the username provided by the user attempting to authenticate
-     * @param password the password provided by the user attempting to authenticate
-     * @return a JWT token as a String if the authentication is successful;
-     * returns null if the authentication fails
-     */
-    public String authenticateUser(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(username);
-        }
-        return null;
-    }
 
     /**
      * Registers a new user if the username and email are not already in use.
@@ -72,6 +48,5 @@ public class UserService {
 
         userRepository.save(userData);
     }
-
 
 }

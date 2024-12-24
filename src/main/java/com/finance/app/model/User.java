@@ -1,4 +1,4 @@
-package com.finance.app.dto;
+package com.finance.app.model;
 
 
 import jakarta.persistence.*;
@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -14,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "Username is required")
     @Column(name = "username", nullable = false, unique = true)
@@ -45,5 +48,11 @@ public class User {
 
     @Column(name = "updated_date", nullable = false)
     private String updatedDate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 }
