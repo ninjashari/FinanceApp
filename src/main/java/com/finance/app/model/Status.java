@@ -8,5 +8,4 @@ public class Status {
     private String status;
     private String message;
     private String token;
-    private User user;
 }
