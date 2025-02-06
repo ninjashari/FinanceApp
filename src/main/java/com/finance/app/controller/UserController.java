@@ -10,7 +10,6 @@ import com.finance.app.security.jwt.JwtUtils;
 import com.finance.app.security.model.UserDetailsImpl;
 import com.finance.app.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserService userService;
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -45,6 +43,8 @@ public class UserController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -132,53 +132,48 @@ public class UserController {
      */
     @GetMapping("/user")
     public ResponseEntity<?> getMyProfile(@RequestHeader("Authorization") String token) {
-        // Check if the token is valid
-        if (token == null || token.equals("Bearer ") || !token.startsWith("Bearer ")) {
-            // Create a status object in case the token is not valid
-            Status status = new Status();
-            status.setCode(HttpStatus.UNAUTHORIZED.value());
-            status.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            status.setMessage("Authorization token must be provided");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(status);
-        }
-
-        // Split the token to remove the "Bearer " part
-        token = token.split(" ")[1];
-
         try {
-            // Validate the token using JWT utility
-            if (!jwtUtils.validateJwtToken(token)) {
-                // Create a status object in case the token is not valid
+            User user = userService.getUser(token);
+            if (user != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(user);
+            } else {
                 Status status = new Status();
-                status.setCode(HttpStatus.UNAUTHORIZED.value());
-                status.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-                status.setMessage("Authorization token is not valid");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(status);
+                status.setCode(HttpStatus.OK.value());
+                status.setStatus(HttpStatus.OK.getReasonPhrase());
+                status.setMessage("User not found");
+                return ResponseEntity.status(HttpStatus.OK).body(status);
             }
-
-            // Extract the username from the token
-            String username = jwtUtils.getUserNameFromJwtToken(token);
-            // Get the user details from the repository
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new Exception("User Not Found with username: " + username));
-
-            // Create a status object to indicate the operation is successful
-            Status status = new Status();
-            status.setCode(HttpStatus.OK.value());
-            status.setStatus(HttpStatus.OK.getReasonPhrase());
-            status.setMessage("User details fetch successfully");
-
-            // Copy user properties to a safeUser object and clear sensitive info
-            User safeUser = new User();
-            BeanUtils.copyProperties(user, safeUser);
-            safeUser.setId(null);
-            safeUser.setPassword(null);
-
-            // Set the safeUser object to status
-            status.setUser(safeUser);
-            return ResponseEntity.status(HttpStatus.OK).body(status);
         } catch (Exception exception) {
             // Create a status object in case an exception occurred
+            Status status = new Status();
+            status.setCode(HttpStatus.BAD_REQUEST.value());
+            status.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+            status.setMessage("An error occurred while processing the request: " + exception.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(status);
+        }
+    }
+
+    /**
+     * Updates the user information based on the provided token and user data.
+     *
+     * @param token the authentication token for user validation.
+     * @param user the User object containing updated user information like first name, last name, and email.
+     * @return a ResponseEntity with the updated User object if successful, or a Status object with details of the error.
+     */
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, @Valid @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(token, user);
+            if (updatedUser != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+            } else {
+                Status status = new Status();
+                status.setCode(HttpStatus.NOT_FOUND.value());
+                status.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
+                status.setMessage("User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(status);
+            }
+        } catch (Exception exception) {
             Status status = new Status();
             status.setCode(HttpStatus.BAD_REQUEST.value());
             status.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
