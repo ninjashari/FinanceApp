@@ -21,7 +21,6 @@ public class UserService {
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
     /**
      * Registers a new user if the username and email are not already in use.
      *
