@@ -75,10 +75,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(status);
         } catch (Exception e) {
             Status status = new Status();
-            status.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            status.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+            status.setCode(HttpStatus.BAD_REQUEST.value());
+            status.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
             status.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(status);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(status);
         }
     }
 
@@ -90,31 +90,39 @@ public class UserController {
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            // Authenticate the user using the provided username and password
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        // Authenticate the user using the provided username and password
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            // Set the authenticated user in the security context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Set the authenticated user in the security context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Generate a JWT token for the authenticated user
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        // Generate a JWT token for the authenticated user
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            // Retrieve the authenticated user's details
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // Retrieve the authenticated user's details
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            // Extract the roles of the authenticated user
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        // Extract the roles of the authenticated user
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            // Return the JWT token and user details in the response
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+        } catch (Exception exception) {
+            Status status = new Status();
+            status.setCode(HttpStatus.UNAUTHORIZED.value());
+            status.setStatus(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            status.setMessage(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(status);
+        }
 
-        // Return the JWT token and user details in the response
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
     }
 
 }
