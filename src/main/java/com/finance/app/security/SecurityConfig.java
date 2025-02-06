@@ -51,6 +51,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Constructs a SecurityFilterChain with specific configurations for security and authorization.
+     *
+     * @param http the HttpSecurity object to configure security settings
+     * @return a SecurityFilterChain instance with applied security configurations
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())

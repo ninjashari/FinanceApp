@@ -23,6 +23,12 @@ public class JwtUtils {
     @Value("${jwt.expiration.time}")
     private int jwtExpirationMs;
 
+    /**
+     * Generates a JWT token for the provided authentication.
+     *
+     * @param authentication the Authentication object representing the authenticated user
+     * @return a JWT token as a String generated based on the user details in the authentication object
+     */
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -35,15 +41,32 @@ public class JwtUtils {
                 .compact();
     }
 
+    /**
+     * Generates a Key object using the JWT secret key stored in the JwtUtils class.
+     *
+     * @return Key object generated with the HMAC SHA algorithm and the decoded JWT secret
+     */
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+    /**
+     * Retrieves the username from the JWT token.
+     *
+     * @param token the JWT token from which to extract the username
+     * @return the username extracted from the JWT token
+     */
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key()).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * Validates a JWT token.
+     *
+     * @param authToken the JWT token to be validated
+     * @return true if the token is valid, false otherwise
+     */
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);

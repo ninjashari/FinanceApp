@@ -39,6 +39,12 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    /**
+     * Builds a UserDetailsImpl object based on the provided User object.
+     *
+     * @param user the User object to build UserDetailsImpl from
+     * @return UserDetailsImpl object with user details and authorities
+     */
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))

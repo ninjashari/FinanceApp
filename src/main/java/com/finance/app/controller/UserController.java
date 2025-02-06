@@ -18,7 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,20 +82,34 @@ public class UserController {
         }
     }
 
+    /**
+     * Authenticates a user and generates a JWT token upon successful authentication.
+     *
+     * @param loginRequest the LoginRequest object containing the user's login credentials (username and password).
+     * @return a ResponseEntity containing a JwtResponse object with the JWT token, user ID, username, email, and roles if authentication is successful.
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
+        // Authenticate the user using the provided username and password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
+        // Set the authenticated user in the security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Generate a JWT token for the authenticated user
         String jwt = jwtUtils.generateJwtToken(authentication);
 
+        // Retrieve the authenticated user's details
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        // Extract the roles of the authenticated user
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        // Return the JWT token and user details in the response
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),

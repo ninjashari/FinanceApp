@@ -20,6 +20,16 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
+    /**
+     * Handle unauthorized errors by setting the response content type to JSON and status to unauthorized.
+     * The response body includes details of the unauthorized error such as status code, error message, and request path.
+     *
+     * @param request       the HttpServletRequest
+     * @param response      the HttpServletResponse
+     * @param authException the AuthenticationException representing the unauthorized error
+     * @throws IOException      if an input or output exception occurs
+     * @throws ServletException if a servlet exception occurs
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
