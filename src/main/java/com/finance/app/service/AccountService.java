@@ -70,7 +70,7 @@ public class AccountService {
         return accountRepository.save(existingAccount);
     }
 
-    public void deleteAccount(Long accountId) {
+    public void deleteAccount(Long accountId) throws Exception {
         accountRepository.deleteById(accountId);
     }
 }

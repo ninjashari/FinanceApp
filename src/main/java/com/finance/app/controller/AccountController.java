@@ -90,4 +90,28 @@ public class AccountController {
         }
     }
 
+    /**
+     * Deletes the account with the specified accountId.
+     *
+     * @param accountId The unique identifier of the account to be deleted.
+     * @return ResponseEntity representing the status of the account deletion operation.
+     */
+    @DeleteMapping("/{accountId}")
+    ResponseEntity<?> deleteAccount(@PathVariable Long accountId) {
+        try {
+            accountService.deleteAccount(accountId);
+            Status status = new Status();
+            status.setStatus(HttpStatus.OK.toString());
+            status.setMessage("Account deleted successfully");
+            status.setCode(HttpStatus.OK.value());
+            return ResponseEntity.status(HttpStatus.OK).body(status);
+        } catch (Exception exception) {
+            Status status = new Status();
+            status.setStatus(HttpStatus.BAD_REQUEST.toString());
+            status.setMessage(exception.getMessage());
+            status.setCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(status);
+        }
+    }
+
 }
