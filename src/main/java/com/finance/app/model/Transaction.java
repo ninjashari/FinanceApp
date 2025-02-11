@@ -1,18 +1,16 @@
 package com.finance.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "transaction")
 @Data
-public class Account {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -20,20 +18,29 @@ public class Account {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "start_balance", nullable = false)
-    private BigDecimal startingBalance;
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
-    @Column(name = "current_balance", nullable = false)
-    private BigDecimal currentBalance;
+    @Column(name = "payee")
+    private String payee;
 
-    @Column(name = "credit_limit")
-    private BigDecimal creditLimit;
+    @Column(name = "from_account")
+    private String fromAccount;
 
-    @Column(name = "currency", nullable = false)
-    private String currency;
+    @Column(name = "to_account")
+    private String toAccount;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
@@ -41,12 +48,12 @@ public class Account {
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
-    private List<Transaction> transactions;
+    @JoinColumn(name = "account_id")
+    private Account account;
 }
