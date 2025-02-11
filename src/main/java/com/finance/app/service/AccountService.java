@@ -30,8 +30,8 @@ public class AccountService {
             User user = userService.getUserFromToken(CommonUtil.extractToken(token));
             if (user != null) {
                 account.setUser(user);
-                account.setCreatedAt(LocalDateTime.now());
-                account.setUpdatedAt(LocalDateTime.now());
+                account.setCreatedDate(LocalDateTime.now());
+                account.setUpdatedDate(LocalDateTime.now());
                 accountRepository.save(account);
             } else {
                 throw new Exception("User not found");
@@ -66,11 +66,11 @@ public class AccountService {
         existingAccount.setName(account.getName());
         existingAccount.setType(account.getType());
         existingAccount.setCurrentBalance(account.getCurrentBalance());
-        existingAccount.setUpdatedAt(LocalDateTime.now());
+        existingAccount.setUpdatedDate(LocalDateTime.now());
         return accountRepository.save(existingAccount);
     }
 
-    public void deleteAccount(Long accountId) {
+    public void deleteAccount(Long accountId) throws Exception {
         accountRepository.deleteById(accountId);
     }
 }
