@@ -1,5 +1,8 @@
 package com.finance.app.util;
 
+import com.finance.app.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class CommonUtil {
 
     /**
