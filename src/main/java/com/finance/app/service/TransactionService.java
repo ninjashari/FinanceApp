@@ -86,12 +86,17 @@ public class TransactionService {
                         // Update both accounts in the database
                         fromAccount.setUpdatedDate(LocalDateTime.now());
                         accountService.updateAccount(fromAccount.getId(), fromAccount);
+
                         toAccount.setUpdatedDate(LocalDateTime.now());
                         accountService.updateAccount(toAccount.getId(), toAccount);
+
+                        transaction.setFromAccount(fromAccount);
+                        transaction.setToAccount(toAccount);
                         break;
                 }
 
                 // Save the new transaction to the database
+                transaction.setAccount(account);
                 transaction.setCreatedDate(LocalDateTime.now());
                 transaction.setUpdatedDate(LocalDateTime.now());
                 newTransaction = transactionRepository.save(transaction);
