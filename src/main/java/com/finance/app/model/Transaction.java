@@ -33,11 +33,15 @@ public class Transaction {
     @Column(name = "payee")
     private String payee;
 
-    @Column(name = "from_account")
-    private String fromAccount;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "from_account_id")
+    private Account fromAccount;
 
-    @Column(name = "to_account")
-    private String toAccount;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "to_account_id")
+    private Account toAccount;
 
     @Column(name = "description")
     private String description;
