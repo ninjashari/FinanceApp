@@ -1,9 +1,8 @@
 package com.finance.app.model;
 
-public enum EStatus {
+public enum ETransactionStatus {
     RECONCILED("Reconciled"), UNRECONCILED("Unreconciled");
 
-    EStatus(String value) {
-
+    ETransactionStatus(String status) {
     }
 }
