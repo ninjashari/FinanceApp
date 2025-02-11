@@ -15,9 +15,6 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name", unique = true, nullable = false)
-    private String name;
-
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
@@ -33,12 +30,10 @@ public class Transaction {
     @Column(name = "payee")
     private String payee;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "from_account_id")
     private Account fromAccount;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "to_account_id")
     private Account toAccount;
